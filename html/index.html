@@ -2,8 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/html/img/smarc.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Model Viewer</title>
+    <title>MST AR</title>
 
     <script
       type="module"
@@ -48,7 +49,7 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
-        max-width: 1200px;
+        max-width: 1400px;
         gap: 2rem;
       }
 
@@ -79,9 +80,18 @@
         text-transform: uppercase;
       }
 
+      .viewers-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        width: 100%;
+        max-width: 1200px;
+        opacity: 0;
+        animation: fadeInScale 1s ease-out 0.5s forwards;
+      }
+
       .viewer-container {
         width: 100%;
-        max-width: 800px;
         aspect-ratio: 16 / 10;
         border-radius: 20px;
         overflow: hidden;
@@ -92,8 +102,29 @@
         background: rgba(10, 10, 30, 0.8);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        opacity: 0;
-        animation: fadeInScale 1s ease-out 0.5s forwards;
+        transition: all 0.3s ease;
+      }
+
+      .viewer-container:hover {
+        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7),
+          0 0 120px rgba(15, 15, 15, 0.15),
+          inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .model-title {
+        position: absolute;
+        top: 15px;
+        left: 20px;
+        z-index: 5;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(0, 0, 0, 0.5);
+        padding: 8px 15px;
+        border-radius: 8px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       model-viewer {
@@ -124,19 +155,25 @@
         backdrop-filter: blur(5px);
       }
 
+      .loader-overlay.fade-out {
+        opacity: 0;
+        transition: opacity 0.5s ease-out;
+        pointer-events: none;
+      }
+
       .spinner {
         border: 4px solid rgba(255, 255, 255, 0.1);
         border-top: 4px solid #00f0ff;
         border-radius: 50%;
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
         margin-bottom: 1rem;
         box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
       }
 
       .loading-text {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: 400;
         color: rgba(255, 255, 255, 0.8);
         letter-spacing: 0.1em;
@@ -233,6 +270,18 @@
         }
       }
 
+      @media (max-width: 1024px) {
+        .viewers-grid {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        
+        .viewer-container {
+          max-width: 600px;
+          margin: 0 auto;
+        }
+      }
+
       @media (max-width: 768px) {
         .title {
           font-size: 2.5rem;
@@ -247,8 +296,8 @@
         }
 
         .spinner {
-          width: 50px;
-          height: 50px;
+          width: 40px;
+          height: 40px;
         }
 
         .controls-info {
@@ -257,6 +306,11 @@
 
         .control-item {
           font-size: 0.8rem;
+        }
+
+        .model-title {
+          font-size: 1rem;
+          padding: 6px 12px;
         }
       }
 
@@ -274,26 +328,10 @@
           gap: 0.5rem;
         }
 
-        .spinner {
-          width: 40px;
-          height: 40px;
+        .model-title {
+          font-size: 0.9rem;
+          padding: 5px 10px;
         }
-      }
-
-      /* Hover effects for the viewer */
-      .viewer-container:hover {
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7),
-          0 0 120px rgba(15, 15, 15, 0.15),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-        transition: all 0.3s ease;
-      }
-
-      /* Loading animation enhancement */
-      .loader-overlay.fade-out {
-        opacity: 0;
-        transition: opacity 0.5s ease-out;
-        pointer-events: none;
       }
     </style>
   </head>
@@ -301,30 +339,59 @@
     <div class="main-container">
       <header class="header">
         <h1 class="title">MST Certificate</h1>
+        <p class="subtitle">MST AR</p>
       </header>
 
-      <div class="viewer-container">
-        <div class="loader-overlay" id="loader">
-          <div class="spinner"></div>
-          <div class="loading-text">Loading Model...</div>
+      <div class="viewers-grid">
+        <!-- First Model Viewer -->
+        <div class="viewer-container">
+          <div class="model-title">MST Model - Animation</div>
+          <div class="loader-overlay" id="loader1">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading Model...</div>
+          </div>
+          <model-viewer
+            src="./model/mst.glb"
+            ios-src="./model/mst_small.usdz"
+            alt="My Second Teacher - Animation"
+            camera-controls
+            disable-zoom
+            ar
+            shadow-intensity="1"
+            environment-image="neutral"
+            exposure="1"
+            shadow-softness="0.5"
+            id="modelViewer1"
+            loading="eager"
+            animation-name="Action"
+          >
+          </model-viewer>
         </div>
 
-        <model-viewer
-          src="./model/mst.glb"
-          ios-src="./model/mst_1.usdz"
-          alt="My Second Teacher"
-          camera-controls
-          disable-zoom
-          ar
-          shadow-intensity="1"
-          environment-image="neutral"
-          exposure="1"
-          shadow-softness="0.5"
-          id="modelViewer"
-          loading="eager"
-          animation-name="Action"
-        >
-        </model-viewer>
+        <!-- Second Model Viewer -->
+        <div class="viewer-container">
+          <div class="model-title">MST Model - Certificate</div>
+          <div class="loader-overlay" id="loader2">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading Model...</div>
+          </div>
+          <model-viewer
+            src="./model/mst_small.glb"
+            ios-src="./model/mst_small.usdz"
+            alt="My Second Teacher - Certificate"
+            camera-controls
+            disable-zoom
+            ar
+            shadow-intensity="1"
+            environment-image="neutral"
+            exposure="1"
+            shadow-softness="0.5"
+            id="modelViewer2"
+            loading="eager"
+            animation-name="Action"
+          >
+          </model-viewer>
+        </div>
       </div>
 
       <div class="controls-info">
@@ -340,58 +407,96 @@
           <div class="control-icon">✨</div>
           <span>Real-time Lighting</span>
         </div>
+        <div class="control-item">
+          <div class="control-icon">🎬</div>
+          <span>Animated Models</span>
+        </div>
       </div>
 
       <footer class="footer">
         <p class="footer-text">
-          Developed by Skill Museum and Research Center • Model Viewer and WebGL
-          Technology
+          Developed by ING Skill Academy • Skill Museum and Research Center
+          (SMaRC)
         </p>
       </footer>
     </div>
 
     <script>
-      const modelViewer = document.getElementById("modelViewer");
-      const loader = document.getElementById("loader");
+      // Function to handle model viewer setup
+      function setupModelViewer(viewerId, loaderId) {
+        const modelViewer = document.getElementById(viewerId);
+        const loader = document.getElementById(loaderId);
 
-      // Enhanced loading handling
-      modelViewer.addEventListener("load", () => {
-        loader.classList.add("fade-out");
-        setTimeout(() => {
-          loader.style.display = "none";
-        }, 500);
+        // Enhanced loading handling
+        modelViewer.addEventListener("load", () => {
+          loader.classList.add("fade-out");
+          setTimeout(() => {
+            loader.style.display = "none";
+          }, 500);
 
-        const animations = modelViewer.availableAnimations;
-        console.log("Available Animations:", animations);
+          const animations = modelViewer.availableAnimations;
+          console.log(`Available Animations for ${viewerId}:`, animations);
 
-        const animationName = "Action";
-        if (modelViewer.availableAnimations.includes(animationName)) {
-          modelViewer.animationName = animationName;
-          modelViewer.play();
-        }
-      });
+          const animationName = "Action";
+          if (modelViewer.availableAnimations.includes(animationName)) {
+            modelViewer.animationName = animationName;
+            modelViewer.play();
+          }
+        });
 
-      // Error handling
-      modelViewer.addEventListener("error", (event) => {
-        console.error("Model loading error:", event.detail);
-        const loadingText = document.querySelector(".loading-text");
-        loadingText.textContent = "Failed to load model";
-        loadingText.style.color = "#ff4444";
-      });
+        // Error handling
+        modelViewer.addEventListener("error", (event) => {
+          console.error(`Model loading error for ${viewerId}:`, event.detail);
+          const loadingText = loader.querySelector(".loading-text");
+          loadingText.textContent = "Failed to load model";
+          loadingText.style.color = "#ff4444";
+        });
 
-      // Progress indication
-      modelViewer.addEventListener("progress", (event) => {
-        const progress = event.detail.totalProgress;
-        const loadingText = document.querySelector(".loading-text");
-        if (progress < 1) {
-          loadingText.textContent = `Loading... ${Math.round(progress * 100)}%`;
-        }
-      });
+        // Progress indication
+        modelViewer.addEventListener("progress", (event) => {
+          const progress = event.detail.totalProgress;
+          const loadingText = loader.querySelector(".loading-text");
+          if (progress < 1) {
+            loadingText.textContent = `Loading... ${Math.round(progress * 100)}%`;
+          }
+        });
 
-      // Add some interactive feedback
-      modelViewer.addEventListener("camera-change", () => {
-        // Optional: Add subtle visual feedback when camera moves
-      });
+        // Add some interactive feedback
+        modelViewer.addEventListener("camera-change", () => {
+          // Optional: Add subtle visual feedback when camera moves
+        });
+      }
+
+      // Initialize both model viewers
+      setupModelViewer("modelViewer1", "loader1");
+      setupModelViewer("modelViewer2", "loader2");
+
+      // Optional: Sync camera movements between viewers
+      function syncCameras() {
+        const viewer1 = document.getElementById("modelViewer1");
+        const viewer2 = document.getElementById("modelViewer2");
+        
+        let syncing = false;
+        
+        viewer1.addEventListener("camera-change", () => {
+          if (!syncing) {
+            syncing = true;
+            viewer2.cameraOrbit = viewer1.cameraOrbit;
+            setTimeout(() => syncing = false, 50);
+          }
+        });
+        
+        viewer2.addEventListener("camera-change", () => {
+          if (!syncing) {
+            syncing = true;
+            viewer1.cameraOrbit = viewer2.cameraOrbit;
+            setTimeout(() => syncing = false, 50);
+          }
+        });
+      }
+
+      // Uncomment the line below if you want synchronized camera movements
+      // syncCameras();
     </script>
   </body>
 </html>
