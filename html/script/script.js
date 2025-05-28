@@ -29,31 +29,31 @@ modelViewer1.addEventListener("progress", (event) => {
 });
 
 // Setup second model viewer
-const modelViewer2 = document.getElementById("modelViewer2");
-const loader2 = document.getElementById("loader2");
+// const modelViewer2 = document.getElementById("modelViewer2");
+// const loader2 = document.getElementById("loader2");
 
-modelViewer2.addEventListener("load", () => {
-  loader2.classList.add("fade-out");
-  setTimeout(() => {
-    loader2.style.display = "none";
-  }, 500);
+// modelViewer2.addEventListener("load", () => {
+//   loader2.classList.add("fade-out");
+//   setTimeout(() => {
+//     loader2.style.display = "none";
+//   }, 500);
 
-  if (modelViewer2.availableAnimations.includes("Action")) {
-    modelViewer2.animationName = "Action";
-    modelViewer2.play();
-  }
-});
+//   if (modelViewer2.availableAnimations.includes("Action")) {
+//     modelViewer2.animationName = "Action";
+//     modelViewer2.play();
+//   }
+// });
 
-modelViewer2.addEventListener("error", () => {
-  const loadingText2 = loader2.querySelector(".loading-text");
-  loadingText2.textContent = "Failed to load model";
-  loadingText2.style.color = "#ff4444";
-});
+// modelViewer2.addEventListener("error", () => {
+//   const loadingText2 = loader2.querySelector(".loading-text");
+//   loadingText2.textContent = "Failed to load model";
+//   loadingText2.style.color = "#ff4444";
+// });
 
-modelViewer2.addEventListener("progress", (event) => {
-  const progress = event.detail.totalProgress;
-  const loadingText2 = loader2.querySelector(".loading-text");
-  if (progress < 1) {
-    loadingText2.textContent = `Loading... ${Math.round(progress * 100)}%`;
-  }
-});
+// modelViewer2.addEventListener("progress", (event) => {
+//   const progress = event.detail.totalProgress;
+//   const loadingText2 = loader2.querySelector(".loading-text");
+//   if (progress < 1) {
+//     loadingText2.textContent = `Loading... ${Math.round(progress * 100)}%`;
+//   }
+// });
