@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/html/img/smarc.png" />
+    <link rel="icon" type="image/png" href="./images/smarc.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MST AR</title>
 
@@ -15,331 +15,13 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background: linear-gradient(
-          135deg,
-          #ffffff 0%,
-          #9f9fb1 25%,
-          #9c8eb9 50%,
-          #a4c0f7 75%,
-          #80b8f0 100%
-        );
-        font-family: "Inter", "Segoe UI", Arial, sans-serif;
-        padding: 20px;
-        color: #ffffff;
-        overflow-x: hidden;
-      }
-
-      .main-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        max-width: 1400px;
-        gap: 2rem;
-      }
-
-      .header {
-        text-align: center;
-        margin-bottom: 1rem;
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 0.2s forwards;
-      }
-
-      .title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #000000, #000000, #000000);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.02em;
-        text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-      }
-
-      .subtitle {
-        font-size: 1.2rem;
-        font-weight: 300;
-        color: rgba(255, 255, 255, 0.7);
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      .viewers-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        width: 100%;
-        max-width: 1200px;
-        opacity: 0;
-        animation: fadeInScale 1s ease-out 0.5s forwards;
-      }
-
-      .viewer-container {
-        width: 100%;
-        aspect-ratio: 16 / 10;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
-          0 0 100px rgba(0, 240, 255, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        position: relative;
-        background: rgba(10, 10, 30, 0.8);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-      }
-
-      .viewer-container:hover {
-        box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7),
-          0 0 120px rgba(15, 15, 15, 0.15),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-      }
-
-      .model-title {
-        position: absolute;
-        top: 15px;
-        left: 20px;
-        z-index: 5;
-        font-size: 1.1rem;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.9);
-        background: rgba(0, 0, 0, 0.5);
-        padding: 8px 15px;
-        border-radius: 8px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-
-      model-viewer {
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(
-          circle at center,
-          rgba(20, 20, 40, 0.9),
-          rgba(5, 5, 15, 0.95)
-        );
-        --poster-color: transparent;
-        --progress-bar-color: #00f0ff;
-        --progress-bar-height: 3px;
-      }
-
-      .loader-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(10, 10, 30, 0.95);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-        backdrop-filter: blur(5px);
-      }
-
-      .loader-overlay.fade-out {
-        opacity: 0;
-        transition: opacity 0.5s ease-out;
-        pointer-events: none;
-      }
-
-      .spinner {
-        border: 4px solid rgba(255, 255, 255, 0.1);
-        border-top: 4px solid #00f0ff;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-        margin-bottom: 1rem;
-        box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
-      }
-
-      .loading-text {
-        font-size: 0.9rem;
-        font-weight: 400;
-        color: rgba(255, 255, 255, 0.8);
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        animation: pulse 2s ease-in-out infinite;
-      }
-
-      .controls-info {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 2rem;
-        margin-top: 1.5rem;
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 1s forwards;
-      }
-
-      .control-item {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.6);
-        transition: color 0.3s ease;
-      }
-
-      .control-item:hover {
-        color: rgba(255, 255, 255, 0.9);
-      }
-
-      .control-icon {
-        width: 20px;
-        height: 20px;
-        background: rgba(0, 240, 255, 0.2);
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        color: #00f0ff;
-      }
-
-      .footer {
-        margin-top: 2rem;
-        text-align: center;
-        opacity: 0;
-        animation: fadeInUp 1s ease-out 1.2s forwards;
-      }
-
-      .footer-text {
-        font-size: 0.85rem;
-        color: rgba(2, 2, 2);
-        font-weight: 300;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.6;
-        }
-        50% {
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      @keyframes fadeInScale {
-        from {
-          opacity: 0;
-          transform: scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: scale(1);
-        }
-      }
-
-      @media (max-width: 1024px) {
-        .viewers-grid {
-          grid-template-columns: 1fr;
-          gap: 1.5rem;
-        }
-        
-        .viewer-container {
-          max-width: 600px;
-          margin: 0 auto;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .title {
-          font-size: 2.5rem;
-        }
-
-        .subtitle {
-          font-size: 1rem;
-        }
-
-        .viewer-container {
-          aspect-ratio: 4 / 3;
-        }
-
-        .spinner {
-          width: 40px;
-          height: 40px;
-        }
-
-        .controls-info {
-          gap: 1rem;
-        }
-
-        .control-item {
-          font-size: 0.8rem;
-        }
-
-        .model-title {
-          font-size: 1rem;
-          padding: 6px 12px;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .title {
-          font-size: 2rem;
-        }
-
-        .subtitle {
-          font-size: 0.9rem;
-        }
-
-        .controls-info {
-          flex-direction: column;
-          gap: 0.5rem;
-        }
-
-        .model-title {
-          font-size: 0.9rem;
-          padding: 5px 10px;
-        }
-      }
-    </style>
+    
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <div class="main-container">
       <header class="header">
         <h1 class="title">MST Certificate</h1>
-        <p class="subtitle">MST AR</p>
       </header>
 
       <div class="viewers-grid">
@@ -353,7 +35,7 @@
           <model-viewer
             src="./model/mst.glb"
             ios-src="./model/mst_small.usdz"
-            alt="My Second Teacher - Animation"
+            alt="My Second Teacher - Full Version"
             camera-controls
             disable-zoom
             ar
@@ -378,7 +60,7 @@
           <model-viewer
             src="./model/mst_small.glb"
             ios-src="./model/mst_small.usdz"
-            alt="My Second Teacher - Certificate"
+            alt="My Second Teacher - Compact Version"
             camera-controls
             disable-zoom
             ar
@@ -415,88 +97,12 @@
 
       <footer class="footer">
         <p class="footer-text">
-          Developed by ING Skill Academy • Skill Museum and Research Center
+          Developed by ING Skill Academy & Skill Museum and Research Center
           (SMaRC)
         </p>
       </footer>
     </div>
 
-    <script>
-      // Function to handle model viewer setup
-      function setupModelViewer(viewerId, loaderId) {
-        const modelViewer = document.getElementById(viewerId);
-        const loader = document.getElementById(loaderId);
-
-        // Enhanced loading handling
-        modelViewer.addEventListener("load", () => {
-          loader.classList.add("fade-out");
-          setTimeout(() => {
-            loader.style.display = "none";
-          }, 500);
-
-          const animations = modelViewer.availableAnimations;
-          console.log(`Available Animations for ${viewerId}:`, animations);
-
-          const animationName = "Action";
-          if (modelViewer.availableAnimations.includes(animationName)) {
-            modelViewer.animationName = animationName;
-            modelViewer.play();
-          }
-        });
-
-        // Error handling
-        modelViewer.addEventListener("error", (event) => {
-          console.error(`Model loading error for ${viewerId}:`, event.detail);
-          const loadingText = loader.querySelector(".loading-text");
-          loadingText.textContent = "Failed to load model";
-          loadingText.style.color = "#ff4444";
-        });
-
-        // Progress indication
-        modelViewer.addEventListener("progress", (event) => {
-          const progress = event.detail.totalProgress;
-          const loadingText = loader.querySelector(".loading-text");
-          if (progress < 1) {
-            loadingText.textContent = `Loading... ${Math.round(progress * 100)}%`;
-          }
-        });
-
-        // Add some interactive feedback
-        modelViewer.addEventListener("camera-change", () => {
-          // Optional: Add subtle visual feedback when camera moves
-        });
-      }
-
-      // Initialize both model viewers
-      setupModelViewer("modelViewer1", "loader1");
-      setupModelViewer("modelViewer2", "loader2");
-
-      // Optional: Sync camera movements between viewers
-      function syncCameras() {
-        const viewer1 = document.getElementById("modelViewer1");
-        const viewer2 = document.getElementById("modelViewer2");
-        
-        let syncing = false;
-        
-        viewer1.addEventListener("camera-change", () => {
-          if (!syncing) {
-            syncing = true;
-            viewer2.cameraOrbit = viewer1.cameraOrbit;
-            setTimeout(() => syncing = false, 50);
-          }
-        });
-        
-        viewer2.addEventListener("camera-change", () => {
-          if (!syncing) {
-            syncing = true;
-            viewer1.cameraOrbit = viewer2.cameraOrbit;
-            setTimeout(() => syncing = false, 50);
-          }
-        });
-      }
-
-      // Uncomment the line below if you want synchronized camera movements
-      // syncCameras();
-    </script>
+    <script src="./script/script.js"></script>
   </body>
 </html>
